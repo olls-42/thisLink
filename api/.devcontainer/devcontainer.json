@@ -1,0 +1,23 @@
+{
+  "name": "PHP Dev Container",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Add recommended VS Code extensions here
+      ]
+    }
+  },
+  "features": {
+  },
+  // Forward port 8080 from the container to the local machine
+  "forwardPorts": [8000, 5432],
+
+  // Example command to run after the container is created
+  // "postCreateCommand": "composer install",
+  // Map the current directory to the web server's root
+  "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html",
+  "remoteUser": "vscode"
+}
