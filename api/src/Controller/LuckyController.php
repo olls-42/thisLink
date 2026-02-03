@@ -14,6 +14,7 @@ class LuckyController  extends AbstractController
     {
         $number = random_int(0, $max);
 
+        phpinfo();
         return $this->json(['number' => $number]);
     }
 }

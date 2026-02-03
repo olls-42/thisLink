@@ -11,6 +11,8 @@
     }
   },
   "features": {
+    "ghcr.io/shyim/devcontainers-features/symfony-cli:latest": {}
+
   },
   // Forward port 8080 from the container to the local machine
   "forwardPorts": [8000, 5432],
