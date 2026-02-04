@@ -1,13 +1,13 @@
 <?php
 
-// src/Controller/LuckyController.php
 namespace App\Controller;
 
 use App\Entity\ReferralLink;
 use App\Repository\ReferralLinkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use ReferralLinkDto;
+use App\Dto\ReferralLinkDto;
+use App\Dto\PaginationQueryDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,7 @@ class ReferralLinkController  extends AbstractController
         $this->logger->debug(self::class . 'constructor initiated');
     }
 
-    #[Route('/referral-link', name: 'create_referral-link', methods: ['POST'])]
+    #[Route('/referral-link', name: 'referral_link_create', methods: ['POST'])]
     public function create(
         #[MapRequestPayload] ReferralLinkDto $dto
     ): JsonResponse
@@ -33,7 +33,7 @@ class ReferralLinkController  extends AbstractController
         $rf = new ReferralLink();
         $rf->setTitle($dto->title);
         $rf->setDescription($dto->description);
-        $rf->setUrl($dto->referralUrl);
+        $rf->setReferralUrl($dto->referralUrl);
 
         $this->repo->save($rf, true);
 
@@ -42,13 +42,23 @@ class ReferralLinkController  extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/referral-link', name: 'retrive_referral-link')]
+    #[Route('/referral-link', name: 'referral_link_read')]
     public function read(
         #[MapQueryString] string $id
     ): JsonResponse
     {
         return $this->json( [
             'item' => $this->repo->find($id)
+        ]);
+    }
+
+    #[Route('/referral-link/list', name: 'referral_link_list')]
+    public function list(
+        #[MapQueryString] PaginationQueryDto $paginationQuery
+    ): JsonResponse
+    {
+        return $this->json( [
+            'items' => $this->repo->findAll()
         ]);
     }
 }

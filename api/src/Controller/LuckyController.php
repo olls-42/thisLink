@@ -16,4 +16,12 @@ class LuckyController  extends AbstractController
 
         return $this->json(['number' => $number]);
     }
+    
+    #[Route('/lucky/numberz/{max}', name: 'app_lucky-number')]
+    public function number_(int $max): JsonResponse
+    {
+        $number = random_int(0, $max);
+
+        return $this->json(['number' => $number]);
+    }
 }

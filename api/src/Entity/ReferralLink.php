@@ -20,7 +20,7 @@ class ReferralLink
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $url = null;
+    private ?string $referralUrl = null;
 
     public function getId(): ?int
     {
@@ -51,15 +51,15 @@ class ReferralLink
         return $this;
     }
 
-    public function setUrl(string $url): static
+    public function setReferralUrl(string $url): static
     {
-        $this->url = $url;
+        $this->referralUrl = $url;
 
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getRefferalUrl(): ?string
     {
-        return $this->url;
+        return $this->referralUrl;
     }
 }
