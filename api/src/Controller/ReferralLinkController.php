@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReferralLinkController  extends AbstractController
 {
@@ -51,7 +52,7 @@ class ReferralLinkController  extends AbstractController
     }
 
 
-    #[Route('/referral-link/{id}', name: 'referral_link_read')]
+    #[Route('/referral-link/{id}', name: 'referral_link_read', methods: ["GET"])]
     public function read( string $id): JsonResponse
     {
         return $this->json( [
@@ -75,6 +76,24 @@ class ReferralLinkController  extends AbstractController
             'item' => $this->repo->save($rf)
         ]);
     }
+
+
+    #[Route('/referral-link/{id}', name: 'referral_link_delete', methods: ['DELETE'])]
+    public function delete( string $id): JsonResponse
+    { 
+        /** @var \App\Entity\ReferralLink */
+        $rf = $this->repo->find($id);
+
+        $this->logger->debug('handle delete request');
+
+        if (!$rf) throw new NotFoundHttpException('Entity not found');
+
+        return $this->json( [
+            'item' => $this->repo->remove($rf, true)
+        ]);
+    }
+
+
 
     #[Route('/referral-link/list', name: 'referral_link_list',  priority: 2)]
     public function list(

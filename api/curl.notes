@@ -1,1 +1,4 @@
 curl -X POST localhost:8000/referral-link -H "Accept: application/json"  -H "Content-Type: application/json" -d '{"title": "hi" }'
+
+
+curl -X DELETE localhost:8000/referral-link/789 -H "Accept: application/json" 

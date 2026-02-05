@@ -35,7 +35,6 @@ class ReferralLinkRepository extends ServiceEntityRepository
         }
     }
 
-
     //    /**
     //     * @return ReferralLink[] Returns an array of ReferralLink objects
     //     */

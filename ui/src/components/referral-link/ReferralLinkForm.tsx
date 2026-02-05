@@ -40,6 +40,9 @@ export default function ReferralLinkForm({
       onSubmitAsync: async ({ value }) => {
         // Validate the value on the server
         const hasErrors = await await createLinkItem(value, true);
+        if (hasErrors && hasErrors.status === "valid") {
+          return null;
+        }
         if (hasErrors) {
           const parsedMessage = hasErrors.error.message.split("\n");
 
@@ -66,6 +69,8 @@ export default function ReferralLinkForm({
           }
 
         }
+
+        return {fields: "todo"}
       },
     },
   });
@@ -92,16 +97,18 @@ export default function ReferralLinkForm({
         {/* A type-safe field component*/}
         <form.Field
           name="title"
-          validators={{
-            onChange: ({ value }) =>
-              !value
-                ? "A Title is required"
-                : value.length < 3
-                  ? "Title must be at least 3 characters"
-                  : undefined,
-            onChangeAsyncDebounceMs: 500,
-            // onChangeAsync: async ({ value, fieldApi }) => await asyncValidator("Title", fieldApi),
-          }}
+          // use backend validation
+
+          // validators={{
+          //   onChange: ({ value }) =>
+          //     !value
+          //       ? "A Title is required"
+          //       : value.length < 3
+          //         ? "Title must be at least 3 characters"
+          //         : undefined,
+          //   onChangeAsyncDebounceMs: 500,
+          //   // onChangeAsync: async ({ value, fieldApi }) => await asyncValidator("Title", fieldApi),
+          // }}
           children={(field) => {
             // Avoid hasty abstractions. Render props are great!
             return (
@@ -112,7 +119,7 @@ export default function ReferralLinkForm({
                 onChange={(e) => field.handleChange(e)}
                 label="Title"
                 name={field.name}
-                isRequired
+                // isRequired
                 placeholder="Enter title"
                 field={field}
               />
@@ -144,19 +151,21 @@ export default function ReferralLinkForm({
         <form.Field
           name="referralUrl"
           validators={{
-            onChange: ({ value }) =>
-              !value
-                ? "A URL value is required"
-                : !isValidURL(value)
-                  ? "Url value must be correct"
-                  : undefined,
-            onChangeAsyncDebounceMs: 500,
-            onChangeAsync: async ({ value }) => {
-              // await new Promise((resolve) => setTimeout(resolve, 1000));
-              return (
-                value.includes("error") && 'No "error" allowed in first name'
-              );
-            },
+            // use backend validation
+
+            // onChange: ({ value }) =>
+            //   !value
+            //     ? "A URL value is required"
+            //     : !isValidURL(value)
+            //       ? "Url value must be correct"
+            //       : undefined,
+            // onChangeAsyncDebounceMs: 500,
+            // onChangeAsync: async ({ value }) => {
+            //   // await new Promise((resolve) => setTimeout(resolve, 1000));
+            //   return (
+            //     value.includes("error") && 'No "error" allowed in first name'
+            //   );
+            // },
           }}
           children={(field) => (
             <div className="flex flex-row items-end ">

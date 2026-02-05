@@ -1,13 +1,13 @@
 import { Button } from '$/components/base/Button';
 import ReferralLinkForm from '$/components/referral-link/ReferralLinkForm';
-import { fetchItem } from '$/storage/ReferralLinkStorage';
+import { fetchLinkItem } from '$/storage/ReferralLinkStorage';
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect } from 'react';
 
 export const Route = createFileRoute('/link/$id/edit')({
   component: RouteComponent,
   loader: async ({ params }) => {
-    return await fetchItem(params.id)
+    return await fetchLinkItem(params.id)
   },
 })
 

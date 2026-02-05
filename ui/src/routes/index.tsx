@@ -5,17 +5,12 @@ import {
   useListData,
   type Selection,
 } from "react-aria-components";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { fetchListItem as fetchReferralList } from "$/storage/ReferralLinkStorage";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { deleteLinkItem, fetchLinkItemList as fetchReferralList } from "$/storage/ReferralLinkStorage";
 import { ListBox, ListBoxItem } from "$/components/base/ListBox";
 import { Checkbox } from "$/components/base/Checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "$/components/base/Button";
-
-interface ErrorMessage {
-  code: number;
-  message: string;
-}
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -23,7 +18,7 @@ export const Route = createFileRoute("/")({
 
 function App() {
   const [referral, setReferral] = useState<ReferralLink | null>(null);
-  const [referrals, setReferrals] = useState<ReferralLink[]>([]);
+  // const [referrals, setReferrals] = useState<ReferralLink[]>([]);
   // const [isLoading, setIsLoading] = useState(true);
   // const [error, setError] = useState<ErrorMessage | null>(null);
   const [drawForm, setDrawForm] = useState<boolean>(false);
@@ -51,6 +46,9 @@ function App() {
     console.log("ef");
   }, []);
 
+  /**
+   * todo: add api endpoint and weight column with sorting
+   */
   const { dragAndDropHooks } = useDragAndDrop({
     isDisabled: !drawForm,
     getItems: (keys, items: typeof referralList.items) =>
@@ -80,6 +78,19 @@ function App() {
     setDrawForm((drawForm) => !drawForm);
   };
 
+
+  const handleDelete = async () =>  {
+    if (referral) {
+      const res = await deleteLinkItem(referral)
+      if (res) {
+        setReferral(null)
+        // cant remove ? need selected item key
+        // referralList.remove()
+        window.location.reload();
+      }
+    }
+  }
+
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -102,6 +113,7 @@ function App() {
         >
           {(item) => <ListBoxItem key={item.id}>{item.title}</ListBoxItem>}
         </ListBox>
+
         {referral && (
           <div className="text-left rounded-xl border-gray-700 border p-5">
             <ul>
@@ -114,6 +126,7 @@ function App() {
                 Edit
               </Link>
             </Button>
+            <Button variant="destructive" onClick={handleDelete}>Delete</Button>
           </div>
         )}
       </div>
