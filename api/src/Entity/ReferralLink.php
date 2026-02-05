@@ -58,7 +58,7 @@ class ReferralLink
         return $this;
     }
 
-    public function getRefferalUrl(): ?string
+    public function getReferralUrl(): ?string
     {
         return $this->referralUrl;
     }

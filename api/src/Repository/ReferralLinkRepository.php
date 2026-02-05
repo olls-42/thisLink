@@ -25,6 +25,7 @@ class ReferralLinkRepository extends ServiceEntityRepository
         }
     }
 
+
     public function remove(ReferralLink $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);

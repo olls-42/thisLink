@@ -11,6 +11,7 @@ use App\Dto\PaginationQueryDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -27,7 +28,8 @@ class ReferralLinkController  extends AbstractController
 
     #[Route('/referral-link', name: 'referral_link_create', methods: ['POST'])]
     public function create(
-        #[MapRequestPayload] ReferralLinkDto $dto
+        #[MapRequestPayload] ReferralLinkDto $dto,
+        #[MapQueryParameter('validate')] ?string $validateOnly
     ): JsonResponse
     {
         $rf = new ReferralLink();
@@ -35,6 +37,12 @@ class ReferralLinkController  extends AbstractController
         $rf->setDescription($dto->description);
         $rf->setReferralUrl($dto->referralUrl);
 
+        if (boolval($validateOnly)) {
+            return $this->json([
+                'status' => 'valid'
+            ], Response::HTTP_CREATED);
+        }
+        
         $this->repo->save($rf, true);
 
         return $this->json([
@@ -42,17 +50,33 @@ class ReferralLinkController  extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/referral-link', name: 'referral_link_read')]
-    public function read(
-        #[MapQueryString] string $id
-    ): JsonResponse
+
+    #[Route('/referral-link/{id}', name: 'referral_link_read')]
+    public function read( string $id): JsonResponse
     {
         return $this->json( [
             'item' => $this->repo->find($id)
         ]);
     }
 
-    #[Route('/referral-link/list', name: 'referral_link_list')]
+    #[Route('/referral-link/{id}', name: 'referral_link_update', methods: ['PUT'])]
+    public function update( string $id,  
+           #[MapRequestPayload] ReferralLinkDto $dto
+    ): JsonResponse
+    {
+        /** @var \App\Entity\ReferralLink */
+        $rf = $this->repo->find($id);
+
+        $rf->setTitle($dto->title);
+        $rf->setDescription($dto->description);
+        $rf->setReferralUrl($dto->referralUrl);
+
+        return $this->json( [
+            'item' => $this->repo->save($rf)
+        ]);
+    }
+
+    #[Route('/referral-link/list', name: 'referral_link_list',  priority: 2)]
     public function list(
         #[MapQueryString] PaginationQueryDto $paginationQuery
     ): JsonResponse
