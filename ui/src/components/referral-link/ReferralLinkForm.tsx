@@ -1,4 +1,4 @@
-import { FieldApi, FormApi, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import type ReferralLink from "./ReferralLink";
 import { TextArea, TextField } from "../base/TextField";
 import { createLinkItem, updateLinkItem } from "$/storage/ReferralLinkStorage";
@@ -14,12 +14,10 @@ export default function ReferralLinkForm({
   context,
   referralLinkItem,
 }: ReferralFormProps) {
-  console.log(referralLinkItem);
 
   const navigator = useNavigate();
 
   const onSubmitHandler = async ({ value }) => {
-    console.log(value);
     if (context == "CREATE") {
       const res = await createLinkItem(value, false);
       if (res) navigator({ to: "/" });

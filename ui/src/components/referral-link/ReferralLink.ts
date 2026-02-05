@@ -6,3 +6,8 @@ export default interface ReferralLink {
   referralUrl: string;
 }
 
+export interface ReferralLinkList {
+  items: ReferralLink[],
+  page: number,
+  pageSize: number
+}

@@ -5,8 +5,16 @@ import {
   useListData,
   type Selection,
 } from "react-aria-components";
-import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { deleteLinkItem, fetchLinkItemList as fetchReferralList } from "$/storage/ReferralLinkStorage";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
+import {
+  deleteLinkItem,
+  fetchLinkItemList as fetchReferralList,
+} from "$/storage/ReferralLinkStorage";
 import { ListBox, ListBoxItem } from "$/components/base/ListBox";
 import { Checkbox } from "$/components/base/Checkbox";
 import { useQuery } from "@tanstack/react-query";
@@ -24,7 +32,6 @@ function App() {
   const [drawForm, setDrawForm] = useState<boolean>(false);
   const referralList = useListData<ReferralLink>({
     getKey: (i) => {
-      console.log(i);
       return i.id;
     },
   });
@@ -33,7 +40,6 @@ function App() {
     queryKey: ["referrals"],
     queryFn: async () => {
       const res = await fetchReferralList();
-      console.log(res);
       // setReferrals(res.items)
       referralList.append(...res.items);
 
@@ -41,10 +47,6 @@ function App() {
     },
     refetchOnWindowFocus: false, // referral special kind of state with keys issue fix
   });
-
-  useEffect(() => {
-    console.log("ef");
-  }, []);
 
   /**
    * todo: add api endpoint and weight column with sorting
@@ -70,7 +72,6 @@ function App() {
       return;
     }
 
-    // console.log(data.items[e["currentKey"] - 1]);
     setReferral(newSelect);
   };
 
@@ -78,18 +79,17 @@ function App() {
     setDrawForm((drawForm) => !drawForm);
   };
 
-
-  const handleDelete = async () =>  {
+  const handleDelete = async () => {
     if (referral) {
-      const res = await deleteLinkItem(referral)
+      const res = await deleteLinkItem(referral);
       if (res) {
-        setReferral(null)
+        setReferral(null);
         // cant remove ? need selected item key
         // referralList.remove()
         window.location.reload();
       }
     }
-  }
+  };
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -100,7 +100,11 @@ function App() {
     <div className="flex flex-col p-5 m-5 bg-gray-950 rounded-2xl">
       {isPending && <div>Loading...</div>}
 
-      <Checkbox className={"p-5"} isSelected={drawForm} onChange={handleDrawFormToggle}>
+      <Checkbox
+        className={"p-5"}
+        isSelected={drawForm}
+        onChange={handleDrawFormToggle}
+      >
         Allow reorder links
       </Checkbox>
       <div className="flex flex-row gap-3">
@@ -126,7 +130,9 @@ function App() {
                 Edit
               </Link>
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>Delete</Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
+            </Button>
           </div>
         )}
       </div>

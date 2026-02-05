@@ -16,7 +16,7 @@ function CreateReferralLink() {
   });
 
   return (
-    <div className='flex flex-col p-5 m-5 bg-gray-950 rounded-2xl'>
+    <div className="flex flex-col p-5 m-5 bg-gray-950 rounded-2xl">
       <Link to="/">Cancel</Link>
       <ReferralLinkForm context="CREATE" referralLinkItem={referral} />
     </div>

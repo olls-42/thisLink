@@ -1,12 +1,23 @@
 import type ReferralLink from "$/components/referral-link/ReferralLink";
 
 /**
- * todo: add types for data, also error messages  
+ * todo: add types for data, also error messages
  */
 interface ErrorMessage {
   code: number;
   message: string;
 }
+
+// todo extract to env
+
+const endpointUrl = new URL("referral-link", "http://localhost:8000");
+const defaultHeaders = {
+  "Content-Type": "application/json",
+  Accept: "application/json",
+};
+
+// todo: make error messages more consistent,
+//       and divide to network and data errors in responses
 
 export async function createLinkItem(
   item: ReferralLink,
@@ -18,16 +29,13 @@ export async function createLinkItem(
     params.append("validate", "true");
   }
 
-  return await fetch(
-    "http://localhost:8000/referral-link?" + params.toString(),
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(item),
-    },
-  )
+  const request = new Request(`${endpointUrl}?${params.toString()}`, {
+    method: "POST",
+    headers: defaultHeaders,
+    body: JSON.stringify(item),
+  });
+
+  return await fetch(request)
     .then((response) => {
       // if (!response.ok) {
       //   throw new Error("Network response was not ok: " + response.statusText);
@@ -45,7 +53,12 @@ export async function createLinkItem(
 }
 
 export async function fetchLinkItem(id: string) {
-  const response = await fetch(`http://localhost:8000/referral-link/${id}`);
+  const request = new Request(`${endpointUrl}/${id}`, {
+    method: "GET",
+    headers: defaultHeaders,
+  });
+
+  const response = await fetch(request);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -54,14 +67,16 @@ export async function fetchLinkItem(id: string) {
   return await response.json();
 }
 
-export async function updateLinkItem(item: ReferralLink): Promise<ReferralLink> {
-  return await fetch(`http://localhost:8000/referral-link/${item.id}`, {
+export async function updateLinkItem(
+  item: ReferralLink,
+): Promise<ReferralLink> {
+  const request = new Request(`${endpointUrl}/${item.id}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify(item),
-  })
+  });
+
+  return await fetch(request)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok: " + response.statusText);
@@ -69,7 +84,7 @@ export async function updateLinkItem(item: ReferralLink): Promise<ReferralLink> 
       return response.json();
     })
     .then((data) => {
-      console.log("Success:", data);
+      // console.log("Success:", data);
       return data;
     })
     .catch((error) => {
@@ -78,13 +93,13 @@ export async function updateLinkItem(item: ReferralLink): Promise<ReferralLink> 
 }
 
 export async function deleteLinkItem(item: ReferralLink) {
-  return await fetch(`http://localhost:8000/referral-link/${item.id}`, {
+  const request = new Request(`${endpointUrl}/${item.id}`, {
     method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify(item),
-  })
+  });
+
+  return await fetch(request)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok: " + response.statusText);
@@ -92,7 +107,7 @@ export async function deleteLinkItem(item: ReferralLink) {
       return response.json();
     })
     .then((data) => {
-      console.log("Success:", data);
+      // console.log("Success:", data);
       return data;
     })
     .catch((error) => {
@@ -100,12 +115,16 @@ export async function deleteLinkItem(item: ReferralLink) {
     });
 }
 
-
 export async function fetchLinkItemList() {
-  const response = await fetch(
-    "http://localhost:8000/referral-link/list?page=1",
-    {},
-  );
+  const params = new URLSearchParams();
+  params.append("page", "1");
+
+  const request = new Request(`${endpointUrl}/list?${params.toString()}`, {
+    method: "GET",
+    headers: defaultHeaders,
+  });
+
+  const response = await fetch(request);
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -114,16 +133,14 @@ export async function fetchLinkItemList() {
   return await response.json();
 }
 
-
-
 export async function validate(input: ReferralLink) {
-  return await fetch("http://localhost:8000/referral-link", {
+  const request = new Request(`${endpointUrl}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify(input),
-  })
+  });
+
+  return await fetch(request)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok: " + response.statusText);
@@ -131,7 +148,7 @@ export async function validate(input: ReferralLink) {
       return response.json();
     })
     .then((data) => {
-      console.log("Success:", data);
+      // console.log("Success:", data);
     })
     .catch((error) => {
       console.error("Error:", error);
