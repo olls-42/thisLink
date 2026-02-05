@@ -5,6 +5,14 @@ This is a simple project with using Symfony framework for serve API
 endpoint for a single entity record.
 
 Please check api folder for sources, code has possibility for simple run in devcontainer.
-Don't forget check env files
+
+- Don't forget check env files
+- composer install && ./bin/console
+- migration?
+- symfony server:start
 
 Second part is ui build with modern tools, like: React, TanStack and Aria Components.
+
+- npm i
+- npm run dev
+
