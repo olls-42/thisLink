@@ -125,11 +125,11 @@ function App() {
               <li>title: {referral.title}</li>
               <li>url: {referral.referralUrl}</li>
             </ul>
-            <Button variant="primary" className={"m-3"}>
+            
               <Link to="/link/$id/edit" params={{ id: referral.id.toString() }}>
-                Edit
+                <Button variant="primary" className={"m-3"}>Edit</Button>
               </Link>
-            </Button>
+            
             <Button variant="destructive" onClick={handleDelete}>
               Delete
             </Button>
@@ -141,9 +141,11 @@ function App() {
         {drawForm ? (
           <Button variant="primary">Save order</Button>
         ) : (
-          <Button variant="primary">
-            <Link to="/link/create">Create new item</Link>
-          </Button>
+          
+            <Link to="/link/create">
+              <Button variant="primary">Create new item</Button>
+              </Link>
+          
         )}
       </div>
     </div>

@@ -166,8 +166,7 @@ export default function ReferralLinkForm({
             // },
           }}
           children={(field) => (
-            <div className="flex flex-row items-end ">
-              <div className="p-4">http://</div>
+            <div >
               <TextField
                 field={field}
                 id={field.name}
@@ -177,7 +176,7 @@ export default function ReferralLinkForm({
                 label="URL"
                 name={field.name}
                 // isRequired
-                placeholder="Add URL"
+                placeholder="Add URL. like http://domain.com"
               ></TextField>
             </div>
           )}
